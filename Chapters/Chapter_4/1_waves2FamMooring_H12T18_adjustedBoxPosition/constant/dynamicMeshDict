@@ -1,0 +1,123 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  v2012                                 |
+|   \\  /    A nd           | Website:  www.openfoam.com                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      dynamicMeshDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+dynamicFvMesh       dynamicMotionSolverFvMesh;
+
+motionSolverLibs 
+(
+  "libfvMotionSolvers.so"
+  "libnewSixDoFRigidBodyMotion.so"
+);
+
+
+motionSolver        sixDoFRigidBodyMotion;
+
+sixDoFRigidBodyMotionCoeffs
+{
+    patches         (Floater);
+    innerDistance   0.05; //extent of the solid-body motion region around body
+    outerDistance   0.35; //extent of mesh-morphing region around body
+
+    centreOfMass    (0.000000000 0.000000000 -0.012600000);
+
+    // Cuboid dimensions DIMENSIONS OF THE FLOATING OBJECT
+    Lx              0.200;
+    Ly              0.200;
+    Lz              0.132;
+
+    // Density of the solid
+   // rhoSolid        500;
+//g               ( 0 0 -9.8065);
+
+    // Cuboid mass
+    mass            3.16;
+    velocity        ( 0    0   0 );
+    // Cuboid moment of inertia about the centre of mass
+	
+     momentOfInertia		(0.015 0.015 0.021);
+     report          on;
+     accelerationRelaxation 0.8;
+     report          on;
+     reportToFile    on;
+    //accelerationDamping 0;
+
+    solver
+    {
+        type Newmark;
+    }
+
+     constraints
+    {
+         fixedPlane
+         {
+             sixDoFRigidBodyMotionConstraint plane;//allows the motions only on the plane normal to y axis, so xz plane
+             normal (0 1 0);
+         }
+        fixedAxis
+        {
+            sixDoFRigidBodyMotionConstraint axis; //The axis constraint only constrains rotational motion. Linear motion is unconstrained. The axis constraint only permits rotation about the defined axis of rotation
+            axis (0 1 0);
+        }
+    } 
+g (0 0 -9.8065);
+
+		restraints
+     {
+      catenaryLine1
+      {
+        sixDoFRigidBodyMotionRestraint mooringLine;
+        anchor              (-1.385 0.423 -0.5); // Anchor point, where the line is attached to an immovable object
+        refAttachmentPt     (-0.100 0.100 -0.0736); // Reference point of attachment to the solid body
+        massPerLength       0.0607; // Mass per unit length
+        lineLength          2; // Length of the mooring line
+        gravityVector       $g; // Gravity vector
+        thickness           0.1; // Line thickness, used only for visualization purposes
+      }
+      catenaryLine2
+      {
+        sixDoFRigidBodyMotionRestraint mooringLine;
+        anchor              (-1.385 -0.423 -0.5); // Anchor point, where the line is attached to an immovable object
+        refAttachmentPt     (-0.100 -0.100 -0.0736); // Reference point of attachment to the solid body
+        massPerLength       0.0607; // Mass per unit length
+        lineLength          2; // Length of the mooring line
+        gravityVector       $g; // Gravity vector
+        thickness           0.1; // Line thickness, used only for visualization purposes
+      }
+      catenaryLine3
+      {
+        sixDoFRigidBodyMotionRestraint mooringLine;
+        anchor              (1.385 0.423 -0.5); // Anchor point, where the line is attached to an immovable object
+        refAttachmentPt     (0.100 0.100 -0.0736); // Reference point of attachment to the solid body
+        massPerLength       0.0607; // Mass per unit length
+        lineLength          2; // Length of the mooring line
+        gravityVector       $g; // Gravity vector
+        thickness           0.1; // Line thickness, used only for visualization purposes
+      }
+	catenaryLine4
+      {
+        sixDoFRigidBodyMotionRestraint mooringLine;
+        anchor              (1.385 -0.423 -0.5); // Anchor point, where the line is attached to an immovable object
+        refAttachmentPt     (0.100 -0.100 -0.0736); // Reference point of attachment to the solid body
+        massPerLength       0.0607; // Mass per unit length
+        lineLength          2; // Length of the mooring line
+        gravityVector       $g; // Gravity vector
+        thickness           0.1; // Line thickness, used only for visualization purposes
+      }
+
+     }
+}
+
+// ************************************************************************* //

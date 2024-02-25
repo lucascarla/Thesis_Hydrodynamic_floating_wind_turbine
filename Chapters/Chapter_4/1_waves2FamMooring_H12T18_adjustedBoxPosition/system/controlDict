@@ -1,0 +1,73 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  v2012                                 |
+|   \\  /    A nd           | Website:  www.openfoam.com                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    location    "system";
+    object      controlDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+//libs            (sixDoFMooring); //to load the moorDyn library
+
+application     waveDyMFoam;
+
+startFrom       startTime;
+
+startTime       0;
+
+stopAt          endTime;
+
+endTime         27;
+
+deltaT          0.001; //BECAUSE THE MOTIONS ARE VERY FAST
+
+writeControl    adjustable;
+
+writeInterval   0.1;
+
+purgeWrite      0;
+
+writeFormat     ascii;
+
+writePrecision  12;
+
+writeCompression off;
+
+timeFormat      general;
+
+timePrecision   6;
+
+runTimeModifiable yes;
+
+adjustTimeStep  yes; //limit the timestep to have a courant numbers less then maxCo. The Courant number is a dimensionless value representing the time a //particle stays in one cell of the mesh. It must be below 1 and should ideally be below 0.7. If the Courant number exceeds 1, the time step is too large to see //the particle in one cell, it “skips” the cell
+
+maxCo           0.5; //remember CFL=(U*DELTAt)/(DELTAx)
+
+maxAlphaCo      0.5;
+
+maxDeltaT       0.5;
+
+functions
+{
+    sixDoF_History
+    {
+        type           sixDoFRigidBodyState;
+        libs           ("libsixDoFRigidBodyState.so");
+        angleFormat    radians;//radians, degrees
+                
+        writeControl   timeStep;
+        writeInterval  5;
+    }
+}
+
+
+
+// ************************************************************************* //

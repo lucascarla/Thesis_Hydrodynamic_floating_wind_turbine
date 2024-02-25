@@ -1,0 +1,32 @@
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+// This file is used to define global variables//
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+inlet_relaxation_length 3.57;	// Length of the relaxation zones
+outlet_relaxation_length 7.14;
+water_depth       0.5; // Water depth
+tank_length	  7.00; // propagaztion domain length
+domain_length     #calc "$tank_length+$inlet_relaxation_length+$outlet_relaxation_length"; //Tank + relaxation zones
+domain_width	  1.00;
+domain_height     0.46;
+
+wave_period     1.8;
+rel_depth       0.140056; // Water depth / wavelength
+steepness       0.0336134; // Wave height / wavelength
+wave_length     3.57; // Remember wave_length is a function of period and depth, so it cannot be arbitrarely chosen!
+wave_height     0.12;
+
+CPH    10; //cells per wave height
+aspect_ratio 1;
+ref_level    2;
+
+// For blockmesh
+x1  -7.07;
+x2  10.64;
+
+y1  #calc "-1*0.5";
+y2  0.5;
+
+z1  #calc "-1*$water_depth";
+z2  $domain_height;
+

@@ -1,0 +1,98 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  v2012                                 |
+|   \\  /    A nd           | Website:  www.openfoam.com                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      dynamicMeshDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+dynamicFvMesh       dynamicMotionSolverFvMesh;
+
+motionSolverLibs    (sixDoFRigidBodyMotion);
+
+motionSolver        sixDoFRigidBodyMotion;
+
+sixDoFRigidBodyMotionCoeffs
+{
+    patches         (Floater);
+    innerDistance   0.05; //extent of the solid-body motion region around body
+    outerDistance   0.35; //extent of mesh-morphing region around body
+
+    centreOfMass    (0.000000000 0.000000000 -0.012600000);
+
+    // Cuboid dimensions DIMENSIONS OF THE FLOATING OBJECT
+    Lx              0.200;
+    Ly              0.200;
+    Lz              0.132;
+
+    // Density of the solid
+   // rhoSolid        500;
+//g               ( 0 0 -9.8065);
+
+    // Cuboid mass
+    mass            3.16;
+    velocity        ( 0    0   0 );
+    // Cuboid moment of inertia about the centre of mass
+	
+     momentOfInertia		(0.015 0.015 0.021);
+     report          on;
+     accelerationRelaxation 0.8;
+     report          on;
+     reportToFile    on;
+    //accelerationDamping 0;
+
+    solver
+    {
+        type Newmark;
+    }
+
+     constraints
+    {
+         fixedPlane
+         {
+             sixDoFRigidBodyMotionConstraint plane;//allows the motions only on the plane normal to y axis, so xz plane
+             normal (0 1 0);
+         }
+        fixedAxis
+        {
+            sixDoFRigidBodyMotionConstraint axis; //The axis constraint only constrains rotational motion. Linear motion is unconstrained. The axis constraint only permits rotation about the defined axis of rotation
+            axis (0 1 0);
+        }
+    } 
+g (0 0 -9.8065);
+
+		 restraints
+     {
+
+	moodyR
+		{
+			sixDoFRigidBodyMotionRestraint moodyR; // map3R, moodyR, moorDynR1
+
+            inputFile              "Mooring/Luca_box.m";
+            couplingMode           "externalPoint";  // "externalPoint" or "externalRigidBody"
+
+            //If couplingMode is "externalPoint", nCouplingDof = 3*refAttachmentPt.size()
+            nCouplingDof           6;
+            refAttachmentPt
+            (
+                (-0.1000      0.1000    -0.0736)
+                (-0.1000     -0.1000    -0.0736)
+                ( 0.1000      0.1000    -0.0736)
+                ( 0.1000     -0.1000    -0.0736)
+            );
+            waveKinematics         false;
+            twoD                   true;
+		}
+}
+
+}
+
+// ************************************************************************* //

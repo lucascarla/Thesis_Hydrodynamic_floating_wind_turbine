@@ -3,3 +3,5 @@ Go to https://gitlab.com/hfchen20/foamMooring/-/tree/master/ and follow the inst
 Moody should be couple correctly straight away, since it is not opensource and is a precompiled library
 
 For moorDyn the following steps require to be followed to be coupled with OpenFOAM-v2012 
+when first compiling .\Allwmake from the foamMooring library, some errors should appear when trying to compile moorDynv1. To overcome those errors the following steps should be followed:
+- 

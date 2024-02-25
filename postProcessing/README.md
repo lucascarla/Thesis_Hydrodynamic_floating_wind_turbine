@@ -15,7 +15,7 @@ tory.
      use etc/bashrcMoody. NB: There is no Windows PATH-setting script
      provided at this time.
 
-Ex:
+Ex: type these lines in the command window ù8Ubuntu or centOS)
 
  cd moodyAPI;
  

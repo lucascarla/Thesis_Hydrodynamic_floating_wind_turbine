@@ -3,7 +3,11 @@ Go to https://gitlab.com/hfchen20/foamMooring/-/tree/master/ and follow the inst
 Moody should be couple correctly straight away, since it is not opensource and is a precompiled library
 
 For moorDyn the following steps require to be followed to be coupled with OpenFOAM-v2012 
-when first compiling .\Allwmake from the foamMooring library, some errors should appear when trying to compile moorDynv1 locally. 
+when first compiling .\Allwmake from the foamMooring library, some errors should appear when trying to compile moorDyn locally. 
 - problem: cmake: /opt/OpenFOAM/OpenFOAM-v2012/ThirdParty/platforms/linux64/gcc-6.3.0/lib64/libstdc++.so.6: version `GLIBCXX_3.4.26' not found (required by cmake). Found a solution,  
 https://www.cfd-online.com/Forums/openfoam-installation/228560-openfoam-v2006-wsl2-ubuntu-20-04-glibcxx_3-4-26-not-found.html. I managed to solve this problem by copying 
 the folder /usr/lib/x86_64-linux-gnu/libstdc++.so.6 in /opt/OpenFOAM/OpenFOAM-v2012/ThirdParty/platforms/linux64/gcc-6.3.0/lib64/. And I renamed the old folder without GLIBCXX_3.4.26 libstdc++.so.6_old
+
+Similar errors showed when trying to couple OpenFOAM-v2012 with moorDynv1 in the hpc. The error lies in the following directory:
+-  g++ -shared -static-libgcc -static-libstdc++ -DMoorDyn_EXPORTS -DLINUX -fPIC -o MoorDyn.so MoorDyn.o Line.o Connection.o Misc.o kiss_fft.o.
+To solve this issue the cMakeLists file in the foamMooring library repository should be modified to match the cMakeLists file in the tutorials folder

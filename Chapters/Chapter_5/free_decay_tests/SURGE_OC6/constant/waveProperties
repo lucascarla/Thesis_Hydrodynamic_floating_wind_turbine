@@ -1,0 +1,175 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  v2012                                 |
+|   \\  /    A nd           | Website:  www.openfoam.com                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version	2.0;
+    format	ascii;
+    class	dictionary;
+    object	waveProperties;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+hub_h               90;
+
+D                   126;
+
+R                   63;
+
+span                61.5;
+
+chord               3.8;
+
+turb_mass           697460;
+
+turb_comx           -0.2;
+
+turb_comy           0;
+
+turb_comz           64;
+
+BL_thick            0.2;
+
+float_width         74;
+
+plat_mass           13473000;
+
+plat_comx           0;
+
+plat_comz           -7.53;
+
+surge_offset        7;
+
+plat_Ixx            1.2898e+10;
+
+plat_Iyy            1.2851e+10;
+
+plat_Izz            1.4189e+10;
+
+plat_orientation    ( 1 0 0 0 1 0 0 0 1 );
+
+total_mass          14046000;
+
+total_comx          0;
+
+total_comz          -7.53;
+
+Ux                  9;
+
+I                   0.02;
+
+TSR                 7.5;
+
+water_depth         200;
+
+wave_period         8;
+
+wave_height         4;
+
+wave_length         154;
+
+in_len              50;
+
+out_len             50;
+
+sim_len             300;
+
+CFLmax              0.5;
+
+dtmax               0.02;
+
+dt0                 0.01;
+
+t_final             320;
+
+length              400;
+
+air_h               0;
+
+width               200;
+
+height              360;
+
+size_0              4.5;
+
+size_x              4.5;
+
+xmin                -200;
+
+xmax                200;
+
+ymin                -100;
+
+ymax                100;
+
+zmin                -180;
+
+zmax                180;
+
+l1                  50;
+
+l2                  300;
+
+l3                  50;
+
+w2                  100;
+
+w1                  50;
+
+w3                  50;
+
+h2                  180;
+
+h1                  90;
+
+h3                  90;
+
+seaLevel            0;
+
+relaxationNames     ( inlet outlet );
+
+initializationName  inlet;
+
+inletCoeffs
+{
+    waveType            potentialCurrent;
+    U                   ( 0 0 0 );
+    Tsoft               0.1;
+
+    relaxationZone
+    {
+        relaxationScheme    Spatial;
+        relaxationShape     Rectangular;
+        beachType           Empty;
+        relaxType           INLET;
+        startX              ( -200 0 -180 );
+        endX                ( -150 0 16 );
+        orientation         ( 1 0 0 );
+    }
+}
+
+outletCoeffs
+{
+    waveType            potentialCurrent;
+    U                   ( 0 0 0 );
+    Tsoft               0.1;
+
+    relaxationZone
+    {
+        relaxationScheme    Spatial;
+        relaxationShape     Rectangular;
+        beachType           Empty;
+        relaxType           OUTLET;
+        startX              ( 150 0 -180 );
+        endX                ( 200 0 16 );
+        orientation         ( 1 0 0 );
+    }
+}
+
+
+
+// ************************************************************************* //

@@ -1,0 +1,92 @@
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+// This file is used to define global variables//
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+//TURBUNE GEOMETRY
+hub_h			90; // Hub height (it was 36 meters before)
+D 			126.0; // Rotor diameter
+R 			#calc "$D/2"; //Rotor radii
+span			61.5; // Blade length
+chord			3.8;// Rough estimation, just to compute turbulence
+
+turb_mass		697460.0; // Turbine (all) mass [kg]
+turb_comx		-0.2; // Turbine's center of mass [m]
+turb_comy		0.0;
+turb_comz		64.0;
+
+//Floater properties
+BL_thick		0.2; // BL thickness 
+float_width		74.0; // Overall floater width
+plat_mass		1.3473E+7; //[kg]
+plat_comx		0.0; // Platform center of mass [m], prolly a surge offset around 6.49969
+plat_comz		-7.53; //[m]
+surge_offset		7.0;
+
+plat_Ixx		1.2898E+10;
+plat_Iyy		1.2851E+10;
+plat_Izz		1.4189E+10;
+plat_orientation	(1 0 0 0 1 0 0 0 1);
+
+// Platform + turbine properties
+total_mass		1.4046E+7;
+total_comx		0.0;
+total_comz		-7.53;
+
+//FLOWFIELD
+Ux			9.0; // Freestream
+I 			0.02; //Turbulence intensity
+TSR			7.5; // Tip-speed ratio		
+
+//WATER AND WAVES
+water_depth 	        200.0;
+wave_period		8.0;
+wave_height		4.0;
+wave_length     	154.00;
+
+//RELAXATION ZONES
+in_len			50.0; //1*time wavelength = generation zone
+out_len			50.0; //2*times wavelength = absorption zone
+sim_len			300.0; // propagation zone
+
+
+// SOLVER CONTROL
+CFLmax			0.5;
+dtmax			#calc "$wave_period/400.0";
+dt0			0.01;
+t_final			#calc "40.0*$wave_period";
+
+// Domain properties
+length 			400.0;
+air_h			0.0; // Air height (from MSL) (it was 2*36 meters before)
+width			200.0; // $air_h; // Domain width
+height 			360.0;
+size_0			4.5;//6.4; // Element size to use for refinement level zero
+size_x			4.5;//#calc "$size_0 * sqrt(3.0)"; // element for base mesh in y and z direction
+
+// Domain sizes
+xmin 			-200.0;
+xmax 			200.0;
+
+ymin 			-100.0;
+ymax 			100.0;
+
+zmin 			-180.0;
+zmax 			180.0;
+
+// Blockmesh zones
+// Zones 1 and 3 are gradeed towards the boundary
+// Zone 2 has uniform grading and aspect ratio
+
+// X direction (length)
+l1 			$in_len; //Upstream
+l2 			$sim_len; // Uniform cell grading
+l3 			$out_len; //Downstream
+
+// Y direction (width)
+w2 			#calc "$width/2"; //Uniform cell grading
+w1 			#calc "($width-$w2)/2"; // Sides
+w3 			$w1; // Sides
+
+// Z direction (heigth)
+h2 			180.0; //+ 1.05*($hub_h + $R)"; //Uniform cell grading
+h1 			90.0; 
+h3 			90.0;//#calc "$height - $h1 - $h2"; 

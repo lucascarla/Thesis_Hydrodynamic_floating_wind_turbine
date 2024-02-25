@@ -16,7 +16,10 @@ tory.
      provided at this time.
 
 Ex:
+
  cd moodyAPI;
+ 
  tar-xzvf moody-Linux.tar.gz;
+ 
  source etc/bashrcMoody
 

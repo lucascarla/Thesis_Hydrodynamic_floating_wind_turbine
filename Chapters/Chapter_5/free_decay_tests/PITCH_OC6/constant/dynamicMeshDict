@@ -1,0 +1,100 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  1.5                                   |
+|   \\  /    A nd           | Web:      http://www.OpenFOAM.org               |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      motionProperties;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+#include "../myVars" //Include global variables
+
+dynamicFvMesh dynamicMotionSolverFvMesh;
+motionSolverLibs 
+( 
+  "libfvMotionSolvers.so"
+  "libnewSixDoFRigidBodyMotion.so"
+);
+solver sixDoFRigidBodyMotion;
+diffusivity     quadratic inverseDistance ( floater );
+ 
+sixDoFRigidBodyMotionCoeffs
+{
+  patches         ( floater );
+  innerDistance   #calc "1.5*$BL_thick";
+  outerDistance   #calc "-1*$zmin -1*($total_comz)"; //distance to the closest boundary (top)
+  centreOfMass    (0.0 0.0 $total_comz);
+  mass            $total_mass;
+  g               ( 0 0 -9.8065);
+  momentOfInertia ($plat_Ixx $plat_Iyy $plat_Izz);
+  velocity        ( 0    0   0 );
+  //angularMomentum (0    0   0); //units [kg-m^2*deg/s]
+  orientation     $plat_orientation;  //Rotation tensor (ZYX convention), see http://planning.cs.uiuc.edu/node102.html
+  
+  //rhoName         rhoInf; //For incompressible, in case density is uniform
+  //rhoInf          1024.81;
+
+  accelerationRelaxation 0.5;
+  accelerationDamping 1.0;
+  report          on;
+  reportToFile    on;
+  solver
+  {
+      type            Newmark;
+  }
+
+  /*constraints
+  {
+    translationsOnly
+    {
+      sixDoFRigidBodyMotionConstraint   plane;
+      normal                             (0.0 0.0 1.0);
+    }
+
+    surgeOnly
+    {
+      sixDoFRigidBodyMotionConstraint   line;
+      direction                         (1.0 0.0 0.0);
+    }
+  }*/    
+    restraints
+{
+      catenaryLine1 // Towards -X
+      {
+       sixDoFRigidBodyMotionRestraint        linearSpring;
+       anchor                                (-105.47 0.0 -58.4);
+       refAttachmentPt                       (-40.860 0.0 -13.3456);
+       stiffness                             52.32E+3;  //units of N/m
+       damping                               0.0;   //units of Ns/m
+       restLength                            55.432;   //units of m
+
+      }
+      catenaryLine2 // Towards +X +Y
+      {
+        sixDoFRigidBodyMotionRestraint       linearSpring;
+        anchor                               (52.73 -91.34 -58.4); // Anchor point, where the line is attached to an immovable object
+        refAttachmentPt                      (20.43 -35.39 -13.985); // Reference point of attachment to the solid body
+        stiffness                            52.32E+3;
+        damping                              0.0;
+        restLength                           55.432; // Length of the mooring line
+      }
+      catenaryLine3 // Towards +X -Y
+      {
+        sixDoFRigidBodyMotionRestraint       linearSpring;
+        anchor                               (52.73 91.34 -58.4); // Anchor point, where the line is attached to an immovable object
+        refAttachmentPt                      (20.43 35.39 -13.985);; // Reference point of attachment to the solid body
+        restLength                           55.432; // Length of the mooring line
+        stiffness                            52.32E+3;
+        damping                              0.0;
+      }
+    } 
+   
+}
+
+// ************************************************************************* //

@@ -14,3 +14,8 @@ tory.
   3. In Linux or OSX environments, source the environment variables. For this,
      use etc/bashrcMoody. NB: There is no Windows PATH-setting script
      provided at this time.
+
+Ex:
+ cd moodyAPI;
+ tar-xzvf moody-Linux.tar.gz;
+ source etc/bashrcMoody

@@ -1,0 +1,38 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  1.5                                   |
+|   \\  /    A nd           | Web:      http://www.OpenFOAM.org               |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      loggingProperties;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+#include "../myVars" //Include global variables
+
+probe_length #calc "2*$wave_height";
+
+surfaceElevation // Name of the wave gauges set
+{
+    
+    type waveGauge;
+    
+    pointDistribution lineDistribution; // Options are: lineDistribution, circularDistribution, quadrilateralDistribution, userDefinedDistribution
+    N 200;
+    linestart ($inlet_relaxation_length  #calc "-1*$wave_height" 0.000);
+    lineend   (#calc "$tank_length+$inlet_relaxation_length" #calc "-1*$wave_height" 0.000);
+    add       ( 0 0 $probe_length); // Length and orientation of gauges
+    axis      z;
+    stretch 1.;
+    
+    // REQURIED ONLY FOR NEW FUNCTIONOBJECT IMPLEMENTATION
+    writeControl adjustableRunTime;
+    writeInterval 0.1;
+}
+
+// ************************************************************************* //

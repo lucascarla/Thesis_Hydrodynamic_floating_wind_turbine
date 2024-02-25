@@ -1,0 +1,5 @@
+Go to https://gitlab.com/hfchen20/foamMooring/-/tree/master/ and follow the instructions on how to couple Moody and Moordyn 
+
+Moody should be couple correctly straight away, since it is not opensource and is a precompiled library
+
+For moorDyn the following steps require to be followed to be coupled with OpenFOAM-v2012 

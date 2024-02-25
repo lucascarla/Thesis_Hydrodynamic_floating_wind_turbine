@@ -23,3 +23,9 @@ Ex: type these lines in the command window ù8Ubuntu or centOS)
  
  source etc/bashrcMoody
 
+Once the previous steps are completed, the moody postProcessing utility can be used. moodyPost.x can be used to create a smaller
+ set of output data for post-processing. It can also be used to generate VTK-files of
+ the cable lines and their tension force magnitude for visualisation in e.g. Kitware’s
+ Paraview. 
+
+ The postprocessing utility can be used to save -vtk files as well as files containing for each integration time-step the values of tension, strain, position, and velocity.

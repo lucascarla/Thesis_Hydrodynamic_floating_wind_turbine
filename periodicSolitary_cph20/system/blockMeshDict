@@ -1,0 +1,77 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM Extend Project: Open Source CFD        |
+|  \\    /   O peration     | Version:  1.6-ext                               |
+|   \\  /    A nd           | Web:      www.extend-project.de                 |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      blockMeshDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+convertToMeters 1;
+
+#include "../myVars" //Include global variables
+
+y1 #calc "-$water_depth";
+y2 $height_y;
+
+vertices
+(
+    (0 #calc "-1*$water_depth" 0)
+    ($wave_length #calc "-1*$water_depth" 0)
+    ($wave_length $height_y 0)
+    (0 $height_y 0)
+    (0 #calc "-1*$water_depth" 0.1)
+    ($wave_length #calc "-1*$water_depth" 0.1)
+    ($wave_length $height_y 0.1)
+    (0 #calc $height_y 0.1)
+);
+
+// Compute cell sizes before refinement
+dy #calc "($wave_height/$CPH)*pow(2,$ref_level)";
+dx #calc "$dy*$aspect_ratio";
+
+// Compute n elements
+ny_p #calc "round(abs($y2-($y1))/$dy)";
+nx_p #calc "round($Lp/$dx)";
+blocks
+
+(
+    hex (0 1 2 3 4 5 6 7) ($nx_p $ny_p 1) simpleGrading (1 1 1)
+);
+
+edges
+(
+);
+
+patches
+(
+    cyclic cyclic1
+    (
+        (0 4 7 3)
+    )
+    cyclic cyclic2
+    ( 
+       (1 5 6 2)
+    )
+    wall bottom
+    (
+        (0 1 5 4)
+    )
+    patch atmosphere
+    (
+        (3 2 6 7)
+    )
+);
+
+mergePatchPairs
+(
+);
+
+// ************************************************************************* //

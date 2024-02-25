@@ -1,0 +1,9 @@
+Restore 0/ from 0.orig/
+Running blockMesh on /home/lscarlatti/waveFlume_ref0
+Running snappyHexMesh on /home/lscarlatti/waveFlume_ref0
+Running waveGaugesNProbes on /home/lscarlatti/waveFlume_ref0
+Running setWaveParameters on /home/lscarlatti/waveFlume_ref0
+waveGaugesNProbes already run on /home/lscarlatti/waveFlume_ref0: remove log file 'log.waveGaugesNProbes' to re-run
+Running relaxationZoneLayout on /home/lscarlatti/waveFlume_ref0
+Running setWaveField on /home/lscarlatti/waveFlume_ref0
+/home/lscarlatti/OpenFOAM/OpenFOAM-v2012/bin/tools/RunFunctions: line 208: 13886 Aborted                 $appRun $appArgs "$@" > $logFile 2>&1

@@ -1,0 +1,18 @@
+#!/bin/bash
+#PBS -j oe
+#PBS -N OFpre_ref4
+#PBS -q fpt-small
+#PBS -l nodes=1:ppn=1,mem=32gb,walltime=12:00:00
+#PBS -m abe
+set –e # We define variables that will be used in running openFOAM
+nproc=1 #Choose the number so that nproc = (num. of nodes) x (cores per node)
+# Load OpenFOAM environment. Specific to customary environment.
+module load mpi/openmpi-1.8.8-gnu
+source $HOME/OpenFOAM/OpenFOAM-v2012/etc/bashrc
+####### make sure any symbolic links are resolved to absolute path and move to working directory ############
+export PBS_O_WORKDIR=$(readlink -f $PBS_O_WORKDIR)
+cd $PBS_O_WORKDIR
+######## Start the solver ###############
+chmod +x preRun
+preRun
+###################### End of script ##################################

@@ -1,0 +1,82 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  1.5                                   |
+|   \\  /    A nd           | Web:      http://www.OpenFOAM.org               |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      controlDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+#include "../myVars" //Include global variables
+
+libs            (sixDoFMooring); //to load the moorDyn library
+
+application     interFoam;
+
+startFrom       latestTime;
+
+startTime       0;
+
+stopAt          endTime;
+
+endTime         1000;
+
+deltaT          $dt0;
+
+writeControl    adjustableRunTime;
+
+writeInterval   5;
+
+purgeWrite      0;
+
+writeFormat     binary;
+
+writePrecision  8;
+
+writeCompression off;
+
+timeFormat      general;
+
+timePrecision   8;
+
+runTimeModifiable yes;
+
+adjustTimeStep  no;
+
+maxCo           0.5; //remember CFL=(U*DELTAt)/(DELTAx)
+
+maxAlphaCo      0.5;
+
+maxDeltaT       0.5;
+
+functions
+{
+    sixDoF_History
+    {
+        type           sixDoFRigidBodyState;
+        libs           ("libsixDoFRigidBodyState.so");
+        angleFormat    degrees;//radians, degrees
+                
+        //writeControl   timeStep;
+        //writeInterval  2;
+    }
+   forces_History
+    {
+    type                forces;
+    libs                ( "libforces.so" );
+    patches             ("floater");
+    origin              (0 0 0);
+    e1                  (1 0 0);
+    e3                  (0 0 1); // (e1, e2) or (e2, e3) or (e3, e1)
+    }
+
+}
+
+
+// ************************************************************************* //

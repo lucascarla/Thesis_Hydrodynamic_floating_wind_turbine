@@ -1,0 +1,77 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  1.5                                   |
+|   \\  /    A nd           | Web:      http://www.OpenFOAM.org               |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      motionProperties;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+#include "../myVars" //Include global variables
+
+dynamicFvMesh dynamicMotionSolverFvMesh;
+motionSolverLibs 
+( 
+  "sixDoFRigidBodyMotion"
+  "libfvMotionSolvers.so"
+  "libnewSixDoFRigidBodyMotion.so"
+);
+solver sixDoFRigidBodyMotion;
+diffusivity     quadratic inverseDistance ( floater );
+ 
+sixDoFRigidBodyMotionCoeffs
+{
+  patches         ( floater );
+  innerDistance   #calc "2.0*$BL_thick";
+  outerDistance   #calc "$zmax -1*($total_comz)"; //distance to the closest boundary (top)
+  centreOfMass    ($total_comx 0.0 $total_comz);
+  mass            $total_mass;
+  g               ( 0 0 -9.8065);
+  momentOfInertia ($plat_Ixx $plat_Iyy $plat_Izz);
+  velocity        ( 0    0   0 );
+  //angularMomentum (0    0   0); //units [kg-m^2*deg/s]
+  orientation     $plat_orientation;  //Rotation tensor (ZYX convention), see http://planning.cs.uiuc.edu/node102.html
+  
+  accelerationRelaxation 0.7;
+  accelerationDamping 1.0;
+  report          on;
+  reportToFile    on;
+  solver
+  {
+      type            Newmark;
+  }
+
+   restraints
+    		{
+moodyR
+		{
+			sixDoFRigidBodyMotionRestraint moodyR; // map3R, moodyR, moorDynR1
+
+            inputFile              "Mooring/Luca_box.m";
+            couplingMode           "externalPoint";  // "externalPoint" or "externalRigidBody"
+
+            //If couplingMode is "externalPoint", nCouplingDof = 3*refAttachmentPt.size()
+            nCouplingDof           6;
+            refAttachmentPt
+            (
+                (20.4340      35.393    -14.000)
+                (-40.870      0.0000    -14.000)
+                (20.4340     -35.393    -14.000)
+            );
+            waveKinematics         false;
+            twoD                   true;
+		}
+    	} 
+
+
+    
+   
+}
+
+// ************************************************************************* //

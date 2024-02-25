@@ -1,0 +1,30 @@
+
+#!/bin/bash
+#PBS -j oe
+#PBS -N OFsolver_case2.1
+#PBS -l walltime=72:00:00
+#PBS -l nodes=3:ppn=20
+#PBS -m abe
+#PBS -q fpt-medium
+#PBS -M lscarlatti
+
+# set -e
+echo Job started on `uname -n` at `date`
+
+nproc=60		       #Choose the number so that nproc = (num. of nodes) x (cores per node)
+Application=waveDyMFoam    
+##Output=log.waveDyMFoam_${PBS_JOBID}
+
+# Loading OPENFOAM environment (custom file)
+module load mpi/openmpi-1.8.8-gnu
+source $HOME/OpenFOAM/OpenFOAM-v2012/etc/bashrc
+
+cd $PBS_O_WORKDIR
+
+######## Start the solver ###############
+
+chmod +x solverRun
+
+solverRun
+
+###################### End of script ##################################

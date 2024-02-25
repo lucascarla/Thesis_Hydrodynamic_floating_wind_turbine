@@ -1,0 +1,68 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  1.5                                   |
+|   \\  /    A nd           | Web:      http://www.OpenFOAM.org               |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      environmentalProperties;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+#include "../myVars" //Include global variables
+
+//start waveProperties.input
+seaLevel  0;
+
+//seaLevelAsReference true;
+
+relaxationNames ();
+
+initializationName cyclic1;
+
+cyclic1Coeffs
+{
+    // Solitary first can be applied, but less accurate
+    // waveType	solitaryFirst;
+    // height	2.0;
+    // depth       5;
+    // direction   (1 0 0);
+    // x0          (150 0 0);
+
+    //waveType	chappelear1962;
+    // height	2.0;
+    //depth       5;
+    //direction   (1 0 0);
+    //x0          (150 0 0);
+
+     // waveType  streamFunction;
+      //specifyPeriod  false;
+     // waveLength  193;
+     // specifyEuler  false;
+     // stokesVelocity  0.0;
+     // N  32; 
+     // Niter  1; //number of waves simulated, not sure about this                   parameter though
+     // Tsoft  0;
+     // depth  20;
+     // period  14;
+     // phi  0.0;
+     // direction  (1.0 0.0 0.0);
+     // height  10;
+      //debug;	
+      waveType    stokesSecond;
+      Tsoft       0;
+      depth       $water_depth;
+      period      $wave_period;
+      phi	  0.0;
+      direction   (1.0 0.0 0.0);
+      height      $wave_height;
+      debug       false;
+      
+};
+
+// ************************************************************************* //

@@ -1,0 +1,98 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  v2012                                 |
+|   \\  /    A nd           | Website:  www.openfoam.com                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version	2.0;
+    format	ascii;
+    class	dictionary;
+    object	waveProperties;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+wave_period         8;
+
+rel_depth           0.4;
+
+steepness           0.05;
+
+wave_length         98.6211;
+
+water_depth         39.4484;
+
+wave_height         4.93106;
+
+Lg                  98.6211;
+
+La                  197.242;
+
+Lp                  197.242;
+
+height_y            9.86212;
+
+ref_level           3;
+
+ref_level_free_surface 4;
+
+CPH                 10;
+
+aspect_ratio        1;
+
+aspect_ratio_max    5;
+
+seaLevel            0;
+
+relaxationNames     ( inlet outlet );
+
+initializationName  inlet;
+
+inletCoeffs
+{
+    waveType            stokesSecond;
+    Tsoft               0;
+    depth               39.4484;
+    period              8;
+    direction           ( 1 0 0 );
+    phi                 0;
+    height              4.93106;
+    waveNumber          (0.0637104 0 0);
+    omega               0.785398;
+    debug               false;
+
+    relaxationZone
+    {
+        relaxationScheme    Spatial;
+        relaxationShape     Rectangular;
+        beachType           Empty;
+        relaxType           INLET;
+        startX              ( 0 -39.4484 0 );
+        endX                ( 98.6211 9.86212 0.1 );
+        orientation         ( 1 0 0 );
+    }
+}
+
+outletCoeffs
+{
+    waveType            potentialCurrent;
+    U                   ( 0 0 0 );
+    Tsoft               0.1;
+
+    relaxationZone
+    {
+        relaxationScheme    Spatial;
+        relaxationShape     Rectangular;
+        beachType           Empty;
+        relaxType           OUTLET;
+        startX              ( 295.863 -39.4484 0 );
+        endX                ( 493.105 9.86212 0.1 );
+        orientation         ( 1 0 0 );
+    }
+}
+
+
+
+// ************************************************************************* //
